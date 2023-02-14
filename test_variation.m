@@ -12,7 +12,7 @@ x_initial = [5*10^6; 10^3; 10^3];
 
 %% Variations in observations
 alpha = [10^-9,10^-10,10^-8,10^-10,5*10^-10];
-alpha_var = 2;
+alpha_var = 1;
 
 if alpha_var == 1
     alpha1 = [10^-11 10^-7];
