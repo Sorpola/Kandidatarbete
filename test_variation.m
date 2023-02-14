@@ -29,7 +29,7 @@ elseif alpha_chosen == 4
 elseif alpha_chosen == 5
     alpha_chosen_variance = [10^-12 10^-7];
 end
-variation=linspace(alpha_chosen_variance(1),alpha_chosen_variance(end),5);
+variation=linspace(alpha_chosen_variance(1),alpha_chosen_variance(end),big_var);
 
 figure("Name",'Variation av parameter ...')
 clf
