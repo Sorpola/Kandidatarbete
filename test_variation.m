@@ -1,7 +1,7 @@
 %%  Initials
 clc; close all; clear
 %%initial of x and time variables
-m = 100; % number of observations
+m = 500; % number of observations
 obs_start = 2.1; obs_end = 7; %interval of observations
 time_final = 20;
 
@@ -12,35 +12,38 @@ x_initial = [5*10^6; 10^3; 10^3];
 
 %% Variations in observations
 alpha = [10^-9,10^-10,10^-8,10^-10,5*10^-10];
-alpha_var = 1;
+alpha_chosen = 4;
+big_var = 5;
+small_var = 2;
 
-if alpha_var == 1
-    alpha1 = [10^-11 10^-7];
-elseif alpha_var == 2
-    alpha1 = [10^-12 10^-8];
-elseif alpha_var == 3
-    alpha1 = [10^-10 10^-6];
-elseif alpha_var == 4
-    alpha1 = [10^-12 10^-8];
-elseif alpha_var == 5
-    alpha1 = [10^-12 10^-7];
+
+
+if alpha_chosen == 1
+    alpha_chosen_variance = [10^-11 10^-7];
+elseif alpha_chosen == 2
+    alpha_chosen_variance = [10^-12 10^-8];
+elseif alpha_chosen == 3
+    alpha_chosen_variance = [10^-10 10^-6];
+elseif alpha_chosen == 4
+    alpha_chosen_variance = [10^-12 10^-8];
+elseif alpha_chosen == 5
+    alpha_chosen_variance = [10^-12 10^-7];
 end
-variation=linspace(alpha1(1),alpha1(end),5);
-small_variation=2;
+variation=linspace(alpha_chosen_variance(1),alpha_chosen_variance(end),5);
 
-figure
+figure("Name",'Variation av parameter ...')
 clf
-for i_big_var=1:length(variation)
-    alpha(alpha_var)=variation(i_big_var);
+for i_big_var=1:big_var
+    alpha(alpha_chosen)=variation(i_big_var);
     alpha=alpha_vec(alpha(1),alpha(2),alpha(3),alpha(4),alpha(5),time_mesh);
     F45 = ForwardODE45(alpha,time_mesh,x_initial);
 
 
-    for i_small_var=1:small_variation
+    for i_small_var=1:small_var
         line_thickness = 1/small_variation;
         if i_big_var == 1
             alpha_plus_var = alpha;
-            alpha_plus_var(alpha_var,:) = alpha_plus_var(alpha_var,:)*(1+0.05*i_small_var);
+            alpha_plus_var(alpha_chosen,:) = alpha_plus_var(alpha_chosen,:)*(1+0.05*i_small_var);
             small_plus_F45 = ForwardODE45(alpha_plus_var,time_mesh,x_initial);
 
             subplot(3,1,1)
@@ -54,7 +57,7 @@ for i_big_var=1:length(variation)
             hold on
         elseif i_big_var == length(variation)
             alpha_minus_var=alpha;
-            alpha_minus_var(alpha_var,:) = alpha_minus_var(alpha_var,:)*(1-0.05*i_small_var);
+            alpha_minus_var(alpha_chosen,:) = alpha_minus_var(alpha_chosen,:)*(1-0.05*i_small_var);
             small_minus_F45 = ForwardODE45(alpha_minus_var,time_mesh,x_initial);
 
             subplot(3,1,1)
@@ -68,8 +71,8 @@ for i_big_var=1:length(variation)
             hold on
         else
             alpha_plus_var = alpha; alpha_minus_var=alpha;
-            alpha_plus_var(alpha_var,:) = alpha_plus_var(alpha_var,:)*(1+0.05*i_small_var);
-            alpha_minus_var(alpha_var,:) = alpha_minus_var(alpha_var,:)*(1-0.05*i_small_var);
+            alpha_plus_var(alpha_chosen,:) = alpha_plus_var(alpha_chosen,:)*(1+0.05*i_small_var);
+            alpha_minus_var(alpha_chosen,:) = alpha_minus_var(alpha_chosen,:)*(1-0.05*i_small_var);
             small_plus_F45 = ForwardODE45(alpha_plus_var,time_mesh,x_initial);
             small_minus_F45 = ForwardODE45(alpha_minus_var,time_mesh,x_initial);
 
