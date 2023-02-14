@@ -40,7 +40,7 @@ for i_big_var=1:big_var
 
 
     for i_small_var=1:small_var
-        line_thickness = 1/small_variation;
+        line_thickness = 1/i_small_var;
         if i_big_var == 1
             alpha_plus_var = alpha;
             alpha_plus_var(alpha_chosen,:) = alpha_plus_var(alpha_chosen,:)*(1+0.05*i_small_var);
