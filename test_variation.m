@@ -13,8 +13,8 @@ x_initial = [5*10^6; 10^3; 10^3];
 %% Variations in observations
 alpha = [10^-9,10^-10,10^-8,10^-10,5*10^-10];
 alpha_chosen = 4;
-big_var = 5;
-small_var = 2;
+big_var = 4;
+small_var = 10;
 
 
 
@@ -29,7 +29,8 @@ elseif alpha_chosen == 4
 elseif alpha_chosen == 5
     alpha_chosen_variance = [10^-12 10^-7];
 end
-variation=linspace(alpha_chosen_variance(1),alpha_chosen_variance(end),big_var);
+variation=logspace(log10(alpha_chosen_variance(1)),log10(alpha_chosen_variance(end)),big_var);
+variation_step=variation(2)/variation(1);
 
 figure("Name",'Variation av parameter ...')
 clf
@@ -40,52 +41,55 @@ for i_big_var=1:big_var
 
 
     for i_small_var=1:small_var
-        line_thickness = 1/i_small_var;
+        line_width = 1/i_small_var;
         if i_big_var == 1
             alpha_plus_var = alpha;
-            alpha_plus_var(alpha_chosen,:) = alpha_plus_var(alpha_chosen,:)*(1+0.05*i_small_var);
+            alpha_plus_var(alpha_chosen,:) = alpha_plus_var(alpha_chosen,:)*(variation_step/2*i_small_var/small_var);
             small_plus_F45 = ForwardODE45(alpha_plus_var,time_mesh,x_initial);
 
             subplot(3,1,1)
-            plot(time_mesh,small_plus_F45(1,:),'--r','linewidth',line_thickness);
+            plot(time_mesh,small_plus_F45(1,:),'--r','linewidth',line_width);
             hold on
             subplot(3,1,2)
-            plot(time_mesh,small_plus_F45(2,:),'--b','linewidth',line_thickness);
+            plot(time_mesh,small_plus_F45(2,:),'--b','linewidth',line_width);
             hold on
             subplot(3,1,3)
-            plot(time_mesh,small_plus_F45(3,:),'--m','linewidth',line_thickness);
+            plot(time_mesh,small_plus_F45(3,:),'--m','linewidth',line_width);
             hold on
+
         elseif i_big_var == length(variation)
             alpha_minus_var=alpha;
-            alpha_minus_var(alpha_chosen,:) = alpha_minus_var(alpha_chosen,:)*(1-0.05*i_small_var);
+            alpha_minus_var(alpha_chosen,:) = alpha_minus_var(alpha_chosen,:)*(0.5 + (i_small_var-1)/small_var/2);
             small_minus_F45 = ForwardODE45(alpha_minus_var,time_mesh,x_initial);
 
             subplot(3,1,1)
-            plot(time_mesh,small_minus_F45(1,:),'--r','linewidth',line_thickness);
+            plot(time_mesh,small_minus_F45(1,:),'--r','linewidth',line_width);
             hold on
             subplot(3,1,2)
-            plot(time_mesh,small_minus_F45(2,:),'--b','linewidth',line_thickness);
+            plot(time_mesh,small_minus_F45(2,:),'--b','linewidth',line_width);
             hold on
             subplot(3,1,3)
-            plot(time_mesh,small_minus_F45(3,:),'--m','linewidth',line_thickness);
+            plot(time_mesh,small_minus_F45(3,:),'--m','linewidth',line_width);
             hold on
+
         else
             alpha_plus_var = alpha; alpha_minus_var=alpha;
-            alpha_plus_var(alpha_chosen,:) = alpha_plus_var(alpha_chosen,:)*(1+0.05*i_small_var);
-            alpha_minus_var(alpha_chosen,:) = alpha_minus_var(alpha_chosen,:)*(1-0.05*i_small_var);
+            alpha_plus_var(alpha_chosen,:) = alpha_plus_var(alpha_chosen,:)*(variation_step/2*i_small_var/small_var);
+            alpha_minus_var(alpha_chosen,:) = alpha_minus_var(alpha_chosen,:)*(0.5 + (i_small_var-1)/small_var/2);
             small_plus_F45 = ForwardODE45(alpha_plus_var,time_mesh,x_initial);
             small_minus_F45 = ForwardODE45(alpha_minus_var,time_mesh,x_initial);
 
             subplot(3,1,1)
-            plot(time_mesh,small_minus_F45(1,:),'--r',time_mesh,small_plus_F45(1,:),'--r','linewidth',line_thickness);
+            plot(time_mesh,small_minus_F45(1,:),'--r',time_mesh,small_plus_F45(1,:),'--r','linewidth',line_width);
             hold on
             subplot(3,1,2)
-            plot(time_mesh,small_minus_F45(2,:),'--b',time_mesh,small_plus_F45(2,:),'--b','linewidth',line_thickness);
+            plot(time_mesh,small_minus_F45(2,:),'--b',time_mesh,small_plus_F45(2,:),'--b','linewidth',line_width);
             hold on
             subplot(3,1,3)
-            plot(time_mesh,small_minus_F45(3,:),'--m',time_mesh,small_plus_F45(3,:),'--m','linewidth',line_thickness);
+            plot(time_mesh,small_minus_F45(3,:),'--m',time_mesh,small_plus_F45(3,:),'--m','linewidth',line_width);
             hold on
         end
+        
     end
 
 
