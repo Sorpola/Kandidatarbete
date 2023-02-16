@@ -20,7 +20,7 @@ alpha_mid = [10^-9 10^-10 10^-8 10^-10 5*10^-10];
 alpha = alpha_mid;  % Värden på parametrar som ej varieras
 big_var = 2;        % Hur många stora linjer
 small_var = 20;      % Hur många små linjer per stor linje
-alpha_chosen = 3;
+alpha_chosen = 5;
 
 
 alpha_chosen_variance = [alpha_min(alpha_chosen) alpha_max(alpha_chosen)];
@@ -29,13 +29,27 @@ variation=logspace(log10(alpha_chosen_variance(1)),log10(alpha_chosen_variance(e
 variation_step=variation(2)/variation(1);
 
 figure("Name", "Variation av parameter  " + alpha_chosen)
-clf
+subplot(3,1,1)
+xlabel('Dagar')
+ylabel('Tumörstorlek')
+hold on
+subplot(3,1,2)
+xlabel('Dagar')
+ylabel('Densitet av M1 makrofager')
+hold on
+subplot(3,1,3)
+xlabel('Dagar')
+ylabel('Densitet av M2 makrofager')
+hold on
+
+
 for i_big_var=1:big_var
     alpha(alpha_chosen)=variation(i_big_var);
     alpha=alpha_vec(alpha(1),alpha(2),alpha(3),alpha(4),alpha(5),time_mesh);
     F45 = ForwardODE45(alpha,time_mesh,x_initial);
 
 
+    
     for i_small_var=1:small_var
         line_width = 1/i_small_var;
         if i_big_var == 1
@@ -45,13 +59,10 @@ for i_big_var=1:big_var
 
             subplot(3,1,1)
             plot(time_mesh,small_plus_F45(1,:),'--r','linewidth',line_width);
-            hold on
             subplot(3,1,2)
             plot(time_mesh,small_plus_F45(2,:),'--b','linewidth',line_width);
-            hold on
             subplot(3,1,3)
             plot(time_mesh,small_plus_F45(3,:),'--m','linewidth',line_width);
-            hold on
 
         elseif i_big_var == length(variation)
             alpha_minus_var=alpha;
@@ -60,13 +71,10 @@ for i_big_var=1:big_var
 
             subplot(3,1,1)
             plot(time_mesh,small_minus_F45(1,:),'--r','linewidth',line_width);
-            hold on
             subplot(3,1,2)
             plot(time_mesh,small_minus_F45(2,:),'--b','linewidth',line_width);
-            hold on
             subplot(3,1,3)
             plot(time_mesh,small_minus_F45(3,:),'--m','linewidth',line_width);
-            hold on
 
         else
             alpha_plus_var = alpha; alpha_minus_var=alpha;
@@ -77,13 +85,10 @@ for i_big_var=1:big_var
 
             subplot(3,1,1)
             plot(time_mesh,small_minus_F45(1,:),'--r',time_mesh,small_plus_F45(1,:),'--r','linewidth',line_width);
-            hold on
             subplot(3,1,2)
             plot(time_mesh,small_minus_F45(2,:),'--b',time_mesh,small_plus_F45(2,:),'--b','linewidth',line_width);
-            hold on
             subplot(3,1,3)
             plot(time_mesh,small_minus_F45(3,:),'--m',time_mesh,small_plus_F45(3,:),'--m','linewidth',line_width);
-            hold on
         end
 
     end
@@ -91,23 +96,11 @@ for i_big_var=1:big_var
 
     subplot(3,1,1)
     plot(time_mesh,F45(1,:),'r','linewidth',1.5);
-    hold on
     subplot(3,1,2)
     plot(time_mesh,F45(2,:),'b','linewidth',1.5)
-    hold on
     subplot(3,1,3)
     plot(time_mesh,F45(3,:),'m','linewidth',1.5)
-    hold on
 end
-subplot(3,1,1)
-xlabel('Dagar')
-ylabel('Tumörstorlek')
-subplot(3,1,2)
-xlabel('Dagar')
-ylabel('Densitet av M1 makrofager')
-subplot(3,1,3)
-xlabel('Dagar')
-ylabel('Densitet av M2 makrofager')
 
 
 %% Inner functions
