@@ -16,19 +16,19 @@ alpha_min = [10^-11 10^-12 10^-10 10^-12 10^-12];   % rekommenderas ej
 alpha_mid = [10^-9 10^-10 10^-8 10^-10 5*10^-10];
 
 
-for i_alpha_chosen=1:5
     % Saker att ändra för att göra andra grafer
-    alpha = alpha_max;  % Värden på parametrar som ej varieras
-    big_var = 5;        % Hur många stora linjer
-    small_var = 2;      % Hur många små linjer per stor linje
+    alpha = alpha_mid;  % Värden på parametrar som ej varieras
+    big_var = 2;        % Hur många stora linjer
+    small_var = 20;      % Hur många små linjer per stor linje
+    alpha_chosen = 2;
 
-    alpha_chosen = i_alpha_chosen;
+
     alpha_chosen_variance = [alpha_min(alpha_chosen) alpha_max(alpha_chosen)];
 
     variation=logspace(log10(alpha_chosen_variance(1)),log10(alpha_chosen_variance(end)),big_var);
     variation_step=variation(2)/variation(1);
 
-    figure("Name", "Variation av parameter" + i_alpha_chosen)
+    figure("Name", "Variation av parameter  " + alpha_chosen)
     clf
     for i_big_var=1:big_var
         alpha(alpha_chosen)=variation(i_big_var);
@@ -109,7 +109,6 @@ for i_alpha_chosen=1:5
     xlabel('Dagar')
     ylabel('Densitet av M2 makrofager')
 
-end
 
 %% Inner functions
 
