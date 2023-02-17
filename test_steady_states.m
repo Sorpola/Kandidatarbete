@@ -3,12 +3,12 @@ clc; close all; clear all;
 %%initial of x and time variables 
 m = 15; % number of observations
 obs_start = 2.1; obs_end = 7; %interval of observations
-time_final = 200;
+time_final = 20;
 
 time_mesh = linspace(0,time_final,m);
 % x_initial = [x_T(0); x_M1(0); x_M2(0)]
 % initial values that seems to fit fig 1a 
-x_initial = [10^(-10); 10^10; 0]; 
+x_initial = [0; 10^3; 0]; 
 
 % (I): (10^-6, 10^-3, 10^-3) gick bort från origo
 % (II): (10^-6, 0, 0) gick mot (Beta_T, 0, 0)
@@ -18,61 +18,87 @@ x_initial = [10^(-10); 10^10; 0];
 %        −8.8025319119×10^9) inte intressant lösning pga negativ densitet
 % (IV): vet inte hur vi ska göra denna!!!!
 
+%% Steady state analysis
+% We have 3 steady states with non-zero values for initial conditions on
+% alpha. 
+time_mesh2 = linspace(0,time_final,100);
+alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
 
+%% First steady state is (0, 0, 0)
+x_init = [10^(-9), 10^(-7), 10^(-5), 0;... 
+          10^(-9), 10^(-7), 10^(-5), 0;...
+          10^(-9), 10^(-7), 10^(-5), 0];
 
-
-%% observations 
-alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
-noise_level = 0.1;% 10% noise
-
-%using ode45 since newton seems to have problems with low numbers for
-% this particular system of odes
-
-[g, g_brus, g_add] = ExactODE45(alpha,time_mesh,noise_level,x_initial);
-figure
-
-plot(time_mesh,g(1,:),'linewidth',2)
-hold on
-plot(time_mesh,g_brus(1,:),'*')
-  legend('x_T, ode45','observations g1')
-  title(['ODE45 versus noisy data, noise , \delta= ',num2str(noise_level)]);
-
-  
-%% Test solver quality : Forward
-figure
-
-hold on
 sch = 0;
-for m2 = [50 100 200 400 800 1000]
-    time_mesh2 = linspace(0,time_final,m2);
-    alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
- 
-    F45 = ForwardODE45(alpha,time_mesh2,x_initial);
+hold on
 
-sch = sch+1;
-subplot(2, 3, sch);
-
-
-plot(time_mesh2,F45(1,:),'--r',time_mesh2,F45(2,:),'--b',time_mesh2,F45(3,:),'--m','linewidth',2);
-
-
-title(' forward problem');
-%xlabel(m2)
-xlabel(['nr.of discr. points:',num2str(m2)]);
-%title(['ODE45 versus noisy data, noise , \delta= ',num2str(noise_level)]);
-
-legend('x_T','x_{M_1}','x_{M_2}')
-
-
-%     text(time_mesh2(end),FN(1,end),['N', num2str(m2)])
-%     text(time_mesh2(end),FN(1,end),['45', num2str(m2)])
+for i=1:length(x_init)
+    
+    F45 = ForwardODE45(alpha,time_mesh2,x_init(:, i));
+    sch = sch+1;
+    subplot(2, 2, sch);
+    
+    plot(time_mesh2,F45(1,:),'--r',time_mesh2,F45(2,:),'--b',time_mesh2,F45(3,:),'--m','linewidth',2);
+    
+    title("(" + x_init(1, i) + ", " + x_init(1, i) + ", " + x_init(1, i) + ")");
+    xlabel("Tid (dagar)");
+    ylabel("Densitet")
+    
+    legend('x_T','x_{M_1}','x_{M_2}', 'location', 'northwest')
 end
 
-grid on
+%% The second is (Beta_T, 0, 0)
 
- 
-hold off
+x_init = [2*10^9, 2*10^9, 3.2*10^9, 3.2*10^9;... 
+          1, 10^(-7), 10^(-5), 0;...
+          1, 10^(-7), 10^(-5), 0];
+sch = 0;
+figure
+hold on
+for i=1:length(x_init)
+      
+    time_mesh2 = linspace(0,time_final,100);
+    alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
+    
+    F45 = ForwardODE45(alpha,time_mesh2,x_init(:, i));
+    sch = sch+1;
+    subplot(2, 2, sch);
+    
+    plot(time_mesh2,F45(1,:),'--r',time_mesh2,F45(2,:),'--b',time_mesh2,F45(3,:),'--m','linewidth',2);
+    
+    title("(" + sprintf('%0.5g', x_init(1, i)) + ", " + sprintf('%0.5g', x_init(2, i)) + ", " + sprintf('%0.5g', x_init(3, i)) + ")");
+    xlabel("Tid (dagar)");
+    ylabel("Densitet")
+    
+    legend('x_T','x_{M_1}','x_{M_2}', 'location', 'northwest')
 
+end
+
+%% The third is () Are we even gonna use this?
+
+% x_init = [10^(-9), 10^(-7), 10^(-5), 0;... 
+%           10^(-9), 10^(-7), 10^(-5), 0;...
+%           10^(-9), 10^(-7), 10^(-5), 0];
+% sch = 0;
+% for i=1:length(x_init)
+%       
+%     time_mesh2 = linspace(0,time_final,100);
+%     alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
+%     
+%     F45 = ForwardODE45(alpha,time_mesh2,x_init(:, i));
+%     sch = sch+1;
+%     subplot(2, 2, sch);
+%     
+%     plot(time_mesh2,F45(1,:),'--r',time_mesh2,F45(2,:),'--b',time_mesh2,F45(3,:),'--m','linewidth',2);
+%     
+%     
+%     title("(" + x_init(1, i) + ", " + x_init(1, i) + ", " + x_init(1, i) + ")");
+%     xlabel("Tid (dagar)");
+%     ylabel("Densitet")
+%     
+%     legend('x_T','x_{M_1}','x_{M_2}', 'location', 'northwest')
+% 
+% end
 
 %% Inner functions
 
