@@ -19,7 +19,7 @@ alpha_mid = [10^-9 10^-10 10^-8 10^-10 5*10^-10];
 % Saker att ändra för att göra andra grafer
 alpha = alpha_mid;  % Värden på parametrar som ej varieras
 big_var = 2;        % Hur många stora linjer
-small_var = 20;      % Hur många små linjer per stor linje
+small_var = 20;     % Hur många små linjer per stor linje
 alpha_chosen = 2;
 
 
@@ -42,8 +42,6 @@ xlabel('Dagar')
 ylabel('Densitet av M2 makrofager')
 hold on
 
-
-
 lightBLUE = [206, 233, 234]/255;
 darkBLUE = [68, 92, 109]/255;
 lightRED= [1, 0, 0];
@@ -61,8 +59,6 @@ purpGRADIENTdark  = @(i,N) darkPURP - (darkPURP-lightPURP)*((i-1)/(N-1));
 N_small=small_var*big_var-1;
 N_big=big_var;
 
-light=zeros(20,3);
-dark=zeros(20,3);
 
 
 for i_big_var=1:big_var
@@ -81,7 +77,6 @@ for i_big_var=1:big_var
             plot(time_mesh,small_plus_F45(1,:),'color',redGRADIENTlight(i_small_var,N_small),'linestyle','--','linewidth',line_width);
             subplot(3,1,2)
             plot(time_mesh,small_plus_F45(2,:),'color',blueGRADIENTlight(i_small_var,N_small),'linestyle','--','linewidth',line_width);
-            light(i_small_var,:)=blueGRADIENTlight(i_small_var,N_small);
             subplot(3,1,3)
             plot(time_mesh,small_plus_F45(3,:),'color',purpGRADIENTlight(i_small_var,N_small),'linestyle','--','linewidth',line_width);
         end
@@ -93,18 +88,13 @@ for i_big_var=1:big_var
             small_minus_F45 = ForwardODE45(alpha_minus_var,time_mesh,x_initial);
 
             subplot(3,1,1)
-            plot(time_mesh,small_minus_F45(1,:),'color',redGRADIENTdark(20-i_small_var,N_small),'linestyle','--','linewidth',line_width);
+            plot(time_mesh,small_minus_F45(1,:),'color',redGRADIENTdark(small_var-i_small_var,N_small),'linestyle','--','linewidth',line_width);
             subplot(3,1,2)
-            plot(time_mesh,small_minus_F45(2,:),'color',blueGRADIENTdark(20-i_small_var,N_small),'linestyle','--','linewidth',line_width);
-            dark(21-i_small_var,:)=blueGRADIENTdark(i_small_var,N_small);
+            plot(time_mesh,small_minus_F45(2,:),'color',blueGRADIENTdark(small_var-i_small_var,N_small),'linestyle','--','linewidth',line_width);
             subplot(3,1,3)
-            plot(time_mesh,small_minus_F45(3,:),'color',purpGRADIENTdark(20-i_small_var,N_small),'linestyle','--','linewidth',line_width);
-
-
+            plot(time_mesh,small_minus_F45(3,:),'color',purpGRADIENTdark(small_var-i_small_var,N_small),'linestyle','--','linewidth',line_width);
         end
-
     else
-
         for i_small_var=1:small_var
             line_width = 0.5;
 
@@ -113,43 +103,36 @@ for i_big_var=1:big_var
             small_plus_F45 = ForwardODE45(alpha_plus_var,time_mesh,x_initial);
 
             subplot(3,1,1)
-            plot(time_mesh,small_plus_F45(1,:),'--r','linewidth',line_width);
+            plot(time_mesh,small_plus_F45(1,:),'color',redGRADIENTlight(i_small_var,N_small),'linestyle','--','linewidth',line_width);
             subplot(3,1,2)
-            plot(time_mesh,small_plus_F45(2,:),'--b','linewidth',line_width);
+            plot(time_mesh,small_plus_F45(2,:),'color',blueGRADIENTlight(i_small_var,N_small),'linestyle','--','linewidth',line_width);
             subplot(3,1,3)
-            plot(time_mesh,small_plus_F45(3,:),'--m','linewidth',line_width);
+            plot(time_mesh,small_plus_F45(3,:),'color',purpGRADIENTlight(i_small_var,N_small),'linestyle','--','linewidth',line_width);
         end
         for i_small_var=1:small_var-1
             line_width = 0.5;
-            
+
             alpha_minus_var=alpha;
             alpha_minus_var(alpha_chosen,:) = alpha_minus_var(alpha_chosen,:)*(0.5 + (i_small_var-1)/small_var/2);
             small_minus_F45 = ForwardODE45(alpha_minus_var,time_mesh,x_initial);
 
             subplot(3,1,1)
-            plot(time_mesh,small_minus_F45(1,:),'--r','linewidth',line_width);
+            plot(time_mesh,small_minus_F45(1,:),'color',redGRADIENTdark(small_var-i_small_var,N_small),'linestyle','--','linewidth',line_width);
             subplot(3,1,2)
-            plot(time_mesh,small_minus_F45(2,:),'--b','linewidth',line_width);
+            plot(time_mesh,small_minus_F45(2,:),'color',blueGRADIENTdark(small_var-i_small_var,N_small),'linestyle','--','linewidth',line_width);
             subplot(3,1,3)
-            plot(time_mesh,small_minus_F45(3,:),'--m','linewidth',line_width);
+            plot(time_mesh,small_minus_F45(3,:),'color',purpGRADIENTdark(small_var-i_small_var,N_small),'linestyle','--','linewidth',line_width);
 
         end
-
-
     end
-
-
-
-
-subplot(3,1,1)
-plot(time_mesh,F45(1,:),'color',redGRADIENTlight(i_big_var,N_big),'linewidth',1.5);
-subplot(3,1,2)
-plot(time_mesh,F45(2,:),'color',blueGRADIENTlight(i_big_var,N_big),'linewidth',1.5)
-subplot(3,1,3)
-plot(time_mesh,F45(3,:),'color',purpGRADIENTlight(i_big_var,N_big),'linewidth',1.5)
+    subplot(3,1,1)
+    plot(time_mesh,F45(1,:),'color',redGRADIENTlight(i_big_var,N_big),'linewidth',1.5);
+    subplot(3,1,2)
+    plot(time_mesh,F45(2,:),'color',blueGRADIENTlight(i_big_var,N_big),'linewidth',1.5)
+    subplot(3,1,3)
+    plot(time_mesh,F45(3,:),'color',purpGRADIENTlight(i_big_var,N_big),'linewidth',1.5)
 end
-light
-dark
+
 
 %% Inner functions
 
