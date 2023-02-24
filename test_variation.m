@@ -3,7 +3,7 @@ clc; close all; clear
 %%initial of x and time variables
 m = 500; % number of observations
 obs_start = 2.1; obs_end = 7; %interval of observations
-time_final = 20;
+time_final = 40;
 
 time_mesh = linspace(0,time_final,m);
 % x_initial = [x_T(0); x_M1(0); x_M2(0)]
@@ -13,18 +13,15 @@ x_initial = [5*10^6; 10^3; 10^3];
 %% Variations in observations
 alpha_max = [10^-7 10^-8 10^-6 10^-8 10^-7];        % rekommenderas ej
 alpha_min = [10^-11 10^-12 10^-10 10^-12 10^-12];   % rekommenderas ej
-alpha_mid = [10^-9 10^-10 10^-8 10^-10 5*10^-10];
-
+alpha_mid = 10.^((log10(alpha_min)+log10(alpha_max))/2);
 
 % Saker att ändra för att göra andra grafer
 alpha = alpha_mid;  % Värden på parametrar som ej varieras
 big_var = 2;        % Hur många stora linjer
 small_var = 20;     % Hur många små linjer per stor linje
-alpha_chosen = 2;
-
+alpha_chosen = 3;   % Vilken parameter ska varieras
 
 alpha_chosen_variance = [alpha_min(alpha_chosen) alpha_max(alpha_chosen)];
-
 variation=logspace(log10(alpha_chosen_variance(1)),log10(alpha_chosen_variance(end)),big_var);
 variation_step=variation(2)/variation(1);
 
@@ -58,8 +55,6 @@ purpGRADIENTdark  = @(i,N) darkPURP - (darkPURP-lightPURP)*((i-1)/(N-1));
 
 N_small=small_var*big_var-1;
 N_big=big_var;
-
-
 
 for i_big_var=1:big_var
     alpha(alpha_chosen)=variation(i_big_var);
