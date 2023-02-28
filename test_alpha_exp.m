@@ -4,13 +4,13 @@ clc, clf
 t_min=0;t_max=20; m=500; x_initial = [5*10^6; 10^3; 10^3];
 time_mesh=linspace(t_min,t_max,m);
 alpha = [10^-11 10^-12 10^-10 10^-12 10^-12]*100;
-alpha_unknown=5;
 alpha_1=alpha_vec(alpha(1),alpha(2),alpha(3),alpha(4),alpha(5),time_mesh);
 x = ForwardODE45(alpha_1,time_mesh,x_initial);
 
-alpha_exp=calculate_alpha_exp(alpha,alpha_unknown,x,t_min,t_max)
 
-norm_alpha_exp=sum(alpha_exp)/length(alpha_exp)
+
+alpha_unknown=4;
+alpha_exp=calculate_alpha_exp(alpha,alpha_unknown,x,t_min,t_max);
 
 plot(1:m-2,log10(alpha_exp),LineWidth=1.5)
 hold on
