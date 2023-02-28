@@ -5,7 +5,7 @@ x_M1=x(2,:);
 x_M2=x(3,:);
 m=length(x_T);
 time_step=(t_max-t_min)/m;
-alpha_exp=zeros(1,m);
+alpha_exp=zeros(m-2,1);
 
 for k=2:m-1
     x_k=x(:,k);
@@ -15,7 +15,7 @@ for k=2:m-1
         dxM2_dt=(x_M2(k+1)-x_M2(k-1))/(2*time_step);
 
         dx_dt=[dxT_dt dxM1_dt dxM2_dt];
-        alpha_exp(k)=calc_explicit(alpha,alpha_unknown,x_k,dx_dt);
+        alpha_exp(k-1)=calc_explicit(alpha,alpha_unknown,x_k,dx_dt);
 end 
 end
 
