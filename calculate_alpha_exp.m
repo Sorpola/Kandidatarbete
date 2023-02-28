@@ -1,5 +1,11 @@
 function alpha_exp=calculate_alpha_exp(alpha,alpha_unknown,x,t_min,t_max)
 
+if alpha_unknown==1 || alpha_unknown==2 || alpha_unknown==3 || alpha_unknown==4 || alpha_unknown==5
+
+else
+    disp('---Inkompatibelt värde på variablen alpha_unknown---')
+end
+
 x_T=x(1,:);
 x_M1=x(2,:);
 x_M2=x(3,:);
