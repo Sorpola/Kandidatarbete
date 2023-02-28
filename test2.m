@@ -25,26 +25,23 @@ plot(time_mesh,g(1,:),'linewidth',2)
 hold on
 plot(time_mesh,g_brus(1,:),'*')
   legend('x_T, ode45','observations g1')
-  title(['ODE45 versus noisy data, noise , \delta= ',num2str(noise_level)]);
+  title(['ODE45 versis data med brus, \delta= ',num2str(noise_level)]);
 
   
 %% Test solver quality : Forward
 figure
-
 hold on
 sch = 0;
-for m2 = [50 100 200 400 800 1000]
+for m2 = [15 20 50 100 500 1000]
     time_mesh2 = linspace(0,time_final,m2);
     alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
-    FN = ForwardNewton(alpha,time_mesh2,x_initial);
     F45 = ForwardODE45(alpha,time_mesh2,x_initial);
 
 sch = sch+1;
 subplot(2, 3, sch);
+plot(time_mesh2,F45(1,:),'--b','linewidth',2);
 
-plot(time_mesh2,FN(1,:),'-r',time_mesh2,F45(1,:),'--b','linewidth',2);
-title(' forward problem');
-xlabel(m2)
+xlabel(['Antal datapunkter:',num2str(m2)])
 
 legend('x_T Newton', 'x_T ode45')
 %     text(time_mesh2(end),FN(1,end),['N', num2str(m2)])
@@ -52,8 +49,8 @@ legend('x_T Newton', 'x_T ode45')
 end
 
 grid on
-
- 
+sgt = sgtitle('ODE45 för framåtproblem');
+sgt.FontSize = 15;
 hold off
 
 
@@ -72,36 +69,31 @@ end
 
 
 figure
-hold on
 
+hold on
 sch = 0;
 
-for m2 = [50 100 200 400 800 1000]
+for m2 = [15 20 50 100 500 1000]
     time_mesh2 = linspace(0,time_final,m2);
     alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
-    g_brus = gPol(time_mesh2);
-    FN = ForwardNewton(alpha,time_mesh2,x_initial);  
-    F45 = ForwardODE45(alpha,time_mesh2,x_initial);  
-    AN = AdjointNewton(alpha, FN, g_brus, time_mesh2, obs_start, obs_end);
+    g_brus = gPol(time_mesh2); 
+    F45 = ForwardODE45(alpha,time_mesh2,x_initial); 
     A45 = AdjointODE45(alpha, F45, g_brus, time_mesh2, obs_start, obs_end);
 
 sch = sch+1;
 subplot(2, 3, sch);
-    plot(time_mesh2,AN(2,:),'-r',time_mesh2,A45(2,:),'--b','linewidth',2)
+    plot(time_mesh2,A45(2,:),'--b','linewidth',2)
 %    text(time_mesh2(1),A45(2,1),['', num2str(m2)])
 %     text(time_mesh2(end),FN(1,end),['45', num2str(m2)])
-    xlabel(m2)
-    title('adjoint problem'); 
-    legend('x_T Newton', 'x_T ode45')
+    xlabel(['Antal datapunkter:',num2str(m2)])
+    legend('x_T ode45')
+    hold on
+    grid on
+     
 end
-   
-
-grid on
-
-
-    
+sgt = sgtitle('ODE45 för bakåtproblem');
+sgt.FontSize = 15;
 hold off
-
 %% Inner functions
 
 function alpha = alpha_vec(dm1,dm2,at1,at2,k12,time_mesh)

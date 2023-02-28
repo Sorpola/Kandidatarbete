@@ -25,7 +25,7 @@ plot(time_mesh,g(1,:),'linewidth',2)
 hold on
 plot(time_mesh,g_brus(1,:),'*')
   legend('x_T, ode45','observations g1')
-  title(['ODE45 versus noisy data, noise , \delta= ',num2str(noise_level)]);
+  title(['ODE45 versis data med brus, \delta= ',num2str(noise_level)]);
 
   
 %% Test solver quality : Forward
@@ -35,14 +35,13 @@ sch = 0;
 for m2 = [15 20 50 100 500 1000]
     time_mesh2 = linspace(0,time_final,m2);
     alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
-    FN = ForwardNewton(alpha,time_mesh2,x_initial);
     F45 = ForwardODE45(alpha,time_mesh2,x_initial);
 
 sch = sch+1;
 subplot(2, 3, sch);
-plot(time_mesh2,FN(1,:),'-r',time_mesh2,F45(1,:),'--b','linewidth',2);
+plot(time_mesh2,F45(1,:),'--b','linewidth',2);
 
-xlabel(m2)
+xlabel(['Antal datapunkter:',num2str(m2)])
 
 legend('x_T Newton', 'x_T ode45')
 %     text(time_mesh2(end),FN(1,end),['N', num2str(m2)])
@@ -50,8 +49,8 @@ legend('x_T Newton', 'x_T ode45')
 end
 
 grid on
-
- title('ODE45 versus Newton  for forward problem');
+sgt = sgtitle('ODE45 för framåtproblem');
+sgt.FontSize = 15;
 hold off
 
 
@@ -70,123 +69,31 @@ end
 
 
 figure
-hold on
 
+hold on
 sch = 0;
 
 for m2 = [15 20 50 100 500 1000]
     time_mesh2 = linspace(0,time_final,m2);
     alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
-    g_brus = gPol(time_mesh2);
-    FN = ForwardNewton(alpha,time_mesh2,x_initial);  
-    F45 = ForwardODE45(alpha,time_mesh2,x_initial);  
-    AN = AdjointNewton(alpha, FN, g_brus, time_mesh2, obs_start, obs_end);
+    g_brus = gPol(time_mesh2); 
+    F45 = ForwardODE45(alpha,time_mesh2,x_initial); 
     A45 = AdjointODE45(alpha, F45, g_brus, time_mesh2, obs_start, obs_end);
 
 sch = sch+1;
 subplot(2, 3, sch);
-    plot(time_mesh2,AN(2,:),'-r',time_mesh2,A45(2,:),'--b','linewidth',2)
+    plot(time_mesh2,A45(2,:),'--b','linewidth',2)
 %    text(time_mesh2(1),A45(2,1),['', num2str(m2)])
 %     text(time_mesh2(end),FN(1,end),['45', num2str(m2)])
-    xlabel(m2)
-    legend('x_T Newton', 'x_T ode45')
-end
-   title('ODE45 versus Newton  for   adjoint problem'); 
-
-grid on
-
-
-    
-hold off
-%% Test Forward Newton vs ode45
-alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
-FN = ForwardNewton(alpha,time_mesh,x_initial);
-F45 = ForwardODE45(alpha,time_mesh,x_initial);
-%figure
-
-subplot(2, 3, 1);
-plot(time_mesh,FN(1,:),time_mesh,F45(1,:),'--','linewidth',2)
-legend('x_T Newton', 'x_T ode45')
-grid on
-%legend('x_T Newton', 'x_M1','x_M2','x_T ode45', 'x_M1','x_M2')
-
-%% Newton and Raluca
-%fig 1a
-figure
-title('(a)')
-alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
-FN = ForwardNewton(alpha,time_mesh,x_initial);
-
-subplot(2, 3, 2);
-plot(time_mesh,FN,'--','linewidth',2)
-grid on
-legend('x_T', 'x_{M1}','x_{M2}')
-
-%fig 1b
-figure
-title('(b)')
-alpha = alpha_vec(10^-11,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
-FN1 = ForwardNewton(alpha,time_mesh,x_initial);
-alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
-FN2 = ForwardNewton(alpha,time_mesh,x_initial);
-alpha = alpha_vec(10^-7,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
-FN3 = ForwardNewton(alpha,time_mesh,x_initial);
-
-subplot(2, 3, 3);
-plot(time_mesh,FN1(1,:),':r',time_mesh,FN2(1,:),'-r',time_mesh,FN3(1,:),'-.r','linewidth',2)
-legend('d_{m1} = 10^{-11}','d_{m1} = 10^{-9}','d_{m1} = 10^{-7}')
-ylim([0 4*10^9])
-grid on
-
-%fig 1c
-figure
-title('(c)')
-alpha = alpha_vec(10^-9,10^-12,10^-8,10^-10,5*10^-10,time_mesh);
-FN1 = ForwardNewton(alpha,time_mesh,x_initial);
-alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
-FN2 = ForwardNewton(alpha,time_mesh,x_initial);
-alpha = alpha_vec(10^-9,10^-8,10^-8,10^-10,5*10^-10,time_mesh);
-FN3 = ForwardNewton(alpha,time_mesh,x_initial);
-
-subplot(2, 3, 4);
-plot(time_mesh,FN1(1,:),':r',time_mesh,FN2(1,:),'-r',time_mesh,FN3(1,:),'-.r','linewidth',2)
-legend('d_{m1} = 10^{-11}','d_{m1} = 10^{-9}','d_{m1} = 10^{-7}')
-ylim([0 4*10^9])
-grid on
-
-
-%fig 1d
-figure
-title('(d)')
-alpha = alpha_vec(10^-9,10^-10,10^-10,10^-10,5*10^-10,time_mesh);
-FN1 = ForwardNewton(alpha,time_mesh,x_initial);
-alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
-FN2 = ForwardNewton(alpha,time_mesh,x_initial);
-alpha = alpha_vec(10^-9,10^-10,10^-6,10^-10,5*10^-10,time_mesh);
-FN3 = ForwardNewton(alpha,time_mesh,x_initial);
-
-subplot(2, 3, 5);
-plot(time_mesh,FN1(1,:),':r',time_mesh,FN2(1,:),'-r',time_mesh,FN3(1,:),'-.r','linewidth',2)
-legend('d_{m1} = 10^{-11}','d_{m1} = 10^{-9}','d_{m1} = 10^{-7}')
-ylim([0 4*10^9])
-grid on
-
-%% Test Adjoint newton vs ode45
-alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
-FN = ForwardNewton(alpha,time_mesh,x_initial);
-F45 = ForwardODE45(alpha,time_mesh,x_initial); 
-AN = AdjointNewton(alpha, FN, g_brus, time_mesh, obs_start, obs_end);
-A45 = AdjointODE45(alpha, F45, g_brus, time_mesh, obs_start, obs_end);
-
-for i = 1:size(AN,1)
-    figure
+    xlabel(['Antal datapunkter:',num2str(m2)])
+    legend('x_T ode45')
     hold on
-	subplot(2, 3, 6);  
-    plot(time_mesh,AN(i,:),'linewidth',2)
-    plot(time_mesh,A45(i,:),'--','linewidth',2)
-    legend(['\lambda',num2str(i),'Newton'],['\lambda',num2str(i),'ode45'])
-    hold off
+    grid on
+     
 end
+sgt = sgtitle('ODE45 för bakåtproblem');
+sgt.FontSize = 15;
+hold off
 %%
 clc
 time = 1:10;
