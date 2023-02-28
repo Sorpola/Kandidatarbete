@@ -7,30 +7,15 @@ m=length(x_T);
 time_step=(t_max-t_min)/m;
 alpha_exp=zeros(1,m);
 
-for k=1:m
+for k=2:m-1
     x_k=x(:,k);
-    if k==1
-        dxT_dt=(x_T(k+1)-x_T(k))/time_step;
-        dxM1_dt=(x_M1(k+1)-x_M1(k))/time_step;
-        dxM2_dt=(x_M2(k+1)-x_M2(k))/time_step;
-
-        dx_dt=[dxT_dt dxM1_dt dxM2_dt];
-        alpha_exp(k)=calc_explicit(alpha,alpha_unknown,x_k,dx_dt);
-    elseif k==m
-        dxT_dt=(x_T(k)-x_T(k-1))/time_step;
-        dxM1_dt=(x_M1(k)-x_M1(k-1))/time_step;
-        dxM2_dt=(x_M2(k)-x_M2(k-1))/time_step;
-
-        dx_dt=[dxT_dt dxM1_dt dxM2_dt];
-        alpha_exp(k)=calc_explicit(alpha,alpha_unknown,x_k,dx_dt);
-    else
+    
         dxT_dt=(x_T(k+1)-x_T(k-1))/(2*time_step);
         dxM1_dt=(x_M1(k+1)-x_M1(k-1))/(2*time_step);
         dxM2_dt=(x_M2(k+1)-x_M2(k-1))/(2*time_step);
 
         dx_dt=[dxT_dt dxM1_dt dxM2_dt];
         alpha_exp(k)=calc_explicit(alpha,alpha_unknown,x_k,dx_dt);
-    end
 end 
 end
 
