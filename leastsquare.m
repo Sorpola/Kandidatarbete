@@ -56,7 +56,7 @@ str_xlabel = ['polynomgrad: ', num2str(degree)];
 %e1=norm(y'- approx)/norm(y')
 
 error=norm(y'- approx)/norm(y');
-fprintf('Relativt fel: %.2f%%', error);
+%fprintf('Relativt fel: %.2f%%', error);
 
 legend('exact ',str_xlabel);
 title(['Relativt fel: ' num2str(error)])
