@@ -39,7 +39,7 @@ VL=V'*V;
 
 %VL=zeros(degree+1);
 
-% solution of the normal equation using Cholesky decomposition
+% Lösning av normalekvationen med Cholesky faktorisering
 %symmetri=issymmetric(VL)
 if all(eig(VL) > 0) % vi kollar om matrisen är positivt definit eftersom chol kräver "symmetrisk positiv definita matriser" annars börjar den anta 
     VL = chol(VL, 'lower'); % chol faktoriserar matrisen lhs till en triangulär matris så att lhs=l'*l
