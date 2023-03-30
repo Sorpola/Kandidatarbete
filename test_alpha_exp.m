@@ -4,7 +4,7 @@ clc, close all
 t_min=0;t_max=20; m=[250 500 1000 5000]; 
 x_initial = [5*10^6; 10^3; 10^3]; 
 alpha = [10^-11 10^-12 10^-10 10^-12 10^-12]*100;
-alpha_unknown=5;
+alpha_unknown=1;
 
 
 
@@ -13,9 +13,10 @@ for i=1:4
     m_i=m(i); h=(t_max-t_min)/(m_i-1);
     time_mesh=linspace(t_min,t_max,m_i);
     alpha_1=alpha_vec(alpha(1),alpha(2),alpha(3),alpha(4),alpha(5),time_mesh);
-    x = ForwardODE45(alpha_1,time_mesh,x_initial);
+    
+    [x, df] = ForwardODE45(alpha_1, time_mesh, x_initial);
 
-    alpha_exp(1:m_i-2,i)=calculate_alpha_exp(alpha,alpha_unknown,x,t_min,t_max);
+    alpha_exp(1:m_i-2,i)=calculate_alpha_exp(alpha,alpha_unknown,x,t_min,t_max, df);
 end
 
 for i=1:4
@@ -23,12 +24,12 @@ for i=1:4
     time_mesh2=t_min+h:h:t_max-h;
 
     subplot(2,2,i)
-    plot(time_mesh2,log10(alpha_exp(1:m_i-2,i)),LineWidth=1.5)
+    plot(time_mesh2,(alpha_exp(1:m_i-2,i)),LineWidth=1.5)
     hold on
-    plot([t_min t_max],[log10(alpha(alpha_unknown)) log10(alpha(alpha_unknown))], 'r--')
+    plot([t_min t_max],[(alpha(alpha_unknown)) (alpha(alpha_unknown))], 'r--')
     legend('Explicit beräknat värde','Korrekt värde')
     title("Jämförelse mellan explicit beräkning och det korrekta värdet av en parameter", m_i + " tidspunkter")
-    xlabel('Dagar'); ylabel('Logaritmen av parametern')
+    xlabel('Dagar'); ylabel('parametern')
 end
 
 %% 
