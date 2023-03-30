@@ -16,8 +16,8 @@ function [lambda] = AdjointNewton(alpha, x, g, time_mesh, obs_start, obs_end)
     %i = nodes + 1;
     for i = nodes:-1:2   
         adjtol=1;adjiter=0;
-        while adjtol>10^(-5) && adjiter < MaxIter   %Newton iterations
-           if t >= obs_start & t <= obs_end % z = 1
+        while adjtol>10^(-3) && adjiter < MaxIter   %Newton iterations
+           if t >= obs_start && t <= obs_end % z = 1
                 adjF = w - lambda(:,i) + dt(i-1)*adjfunc(t,alpha(:,i),x(:,i),...
                                     lambda(:,i),g(:,i));
            else % z = 0
@@ -26,6 +26,7 @@ function [lambda] = AdjointNewton(alpha, x, g, time_mesh, obs_start, obs_end)
            end
            adjJ = eye(length(lambda(:,end))) + dt(i-1)*AdjfuncJacobi(x(:,i),alpha(:,i));
            dw = -adjJ\adjF;
+           
            w=w+dw;              %The Newton iteration 
            adjiter = adjiter +1;
            adjtol = norm(dw,inf);
@@ -40,3 +41,4 @@ function [lambda] = AdjointNewton(alpha, x, g, time_mesh, obs_start, obs_end)
     end
 
 end
+

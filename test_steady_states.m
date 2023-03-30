@@ -49,9 +49,9 @@ end
 
 %% The second is (Beta_T, 0, 0)
 
-x_init = [2*10^9, 2*10^9, 3.2*10^9, 3.2*10^9;... 
-          1, 10^(-7), 10^(-5), 0;...
-          1, 10^(-7), 10^(-5), 0];
+x_init = [2*10^8, 2*10^8, 3.2*10^9, 3.2*10^9;... %Xt
+          1, 10^(-7), 10^(-5), 0;... % Xm1 
+          1, 10^(-7), 10^(-5), 0]; %Xm2
 sch = 0;
 figure
 hold on
@@ -70,7 +70,7 @@ for i=1:length(x_init)
     xlabel("Tid (dagar)");
     ylabel("Densitet")
     
-    legend('x_T','x_{M_1}','x_{M_2}', 'location', 'northwest')
+    legend('x_T','x_{M_1}','x_{M_2}', 'location', 'northeast')
 
 end
 

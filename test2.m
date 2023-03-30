@@ -76,7 +76,7 @@ hold on
 
 sch = 0;
 
-for m2 = [50 100 200 400 800 1000]
+for m2 = [50 100 200 400 2000 64000]
     time_mesh2 = linspace(0,time_final,m2);
     alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
     g_brus = gPol(time_mesh2);

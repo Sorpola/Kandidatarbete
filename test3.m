@@ -8,7 +8,7 @@ time_final = 20;
 time_mesh = linspace(0,time_final,m);
 % x_initial = [x_T(0); x_M1(0); x_M2(0)]
 % initial values that seems to fit fig 1a 
-x_initial = [5*10^6; 10^3; 10^3]; 
+x_initial = [2*10^7; 10^-9; 10^-9]; 
 
 
 %% observations 

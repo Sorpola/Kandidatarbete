@@ -1,4 +1,4 @@
-function alpha_exp=calculate_alpha_exp(alpha,alpha_unknown,x,t_min,t_max)
+function alpha_exp=calculate_alpha_exp(alpha,alpha_unknown,x,t_min,t_max,df)
 
 if alpha_unknown==1 || alpha_unknown==2 || alpha_unknown==3 || alpha_unknown==4 || alpha_unknown==5
 
@@ -13,16 +13,15 @@ m=length(x_T);
 time_step=(t_max-t_min)/m;
 alpha_exp=zeros(m-2,1);
 
-for k=2:m-1
-    x_k=x(:,k);
-    
-        dxT_dt=(x_T(k+1)-x_T(k-1))/(2*time_step);
-        dxM1_dt=(x_M1(k+1)-x_M1(k-1))/(2*time_step);
-        dxM2_dt=(x_M2(k+1)-x_M2(k-1))/(2*time_step);
+for k = 2:m-1
+        x_k = x(:, k);
 
-        dx_dt=[dxT_dt dxM1_dt dxM2_dt];
-        alpha_exp(k-1)=calc_explicit(alpha,alpha_unknown,x_k,dx_dt);
-end 
+        dxT_dt = df(1, k);
+        dxM1_dt = df(2, k);
+        dxM2_dt = df(3, k);
+        
+        alpha_exp(k - 1) = calc_explicit(alpha, alpha_unknown, x_k, [dxT_dt, dxM1_dt, dxM2_dt]);
+end
 end
 
 
