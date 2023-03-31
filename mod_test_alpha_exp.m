@@ -1,5 +1,5 @@
 %%
-clc, clf
+%clc, clf
 
 t_min=0;t_max=20; m=500; x_initial =[5*10^6; 10^3; 10^3];%[3.1298490038*10^9; 10^-5; 402531911.894];% [160473576.808; 0;-8.8025319119*10^9];%  % Måste vi vara i SS för att antagandet om konstanta parametrar ska gälla? 
 time_mesh=linspace(t_min,t_max,m);
@@ -10,31 +10,20 @@ x_Newton = ForwardNewton(alpha_1,time_mesh,x_initial);
 x_45 = ForwardODE45(alpha_1,time_mesh,x_initial);
 t_plot = [1:500];
 
+ljusgron = [229,245,249]/255;
 
 alpha_unknown=5;
-%modifierad, hela
-alpha_exp_23s=RG_calculate_alpha_exp(alpha,alpha_unknown,x_23s,t_min,t_max);
-alpha_exp_Newton=RG_calculate_alpha_exp(alpha,alpha_unknown,x_Newton,t_min,t_max);
-alpha_exp_45=RG_calculate_alpha_exp(alpha,alpha_unknown,x_45,t_min,t_max);
+alpha_exp_23s=mod_calculate_alpha_exp(alpha,alpha_unknown,x_23s,t_min,t_max);
+alpha_exp_Newton=mod_calculate_alpha_exp(alpha,alpha_unknown,x_Newton,t_min,t_max);
+alpha_exp_45=mod_calculate_alpha_exp(alpha,alpha_unknown,x_45,t_min,t_max);
 
-%Orginal, hela
+%orginal
 alpha_exp_23s_org=calculate_alpha_exp(alpha,alpha_unknown,x_23s,t_min,t_max);
 alpha_exp_Newton_org=calculate_alpha_exp(alpha,alpha_unknown,x_Newton,t_min,t_max);
 alpha_exp_45_org=calculate_alpha_exp(alpha,alpha_unknown,x_45,t_min,t_max);
 
-%modifierad, del 1
-alpha_exp_23s_del1=RG_calculate_alpha_exp_del1(alpha,alpha_unknown,x_23s,t_min,t_max);
-alpha_exp_Newton_del1=RG_calculate_alpha_exp_del1(alpha,alpha_unknown,x_Newton,t_min,t_max);
-alpha_exp_45_del1=RG_calculate_alpha_exp_del1(alpha,alpha_unknown,x_45,t_min,t_max);
 
-%modifierad, del 2
-alpha_exp_23s_del2=RG_calculate_alpha_exp_del2(alpha,alpha_unknown,x_23s,t_min,t_max);
-alpha_exp_Newton_del2=RG_calculate_alpha_exp_del2(alpha,alpha_unknown,x_Newton,t_min,t_max);
-alpha_exp_45_del2=RG_calculate_alpha_exp_del2(alpha,alpha_unknown,x_45,t_min,t_max);
-
-
-
-figure
+figure('name','Vanlig')
 subplot(2,2,1)
 plot(time_mesh(2:end-1),alpha_exp_23s,LineWidth=1.5)
 hold on
@@ -44,9 +33,20 @@ plot(time_mesh(2:end-1),alpha_exp_45,LineWidth=1.5)
 hold on
 plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
 legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
-title('Modifierad, hela')
+title('Modifierad')
 
 subplot(2,2,2)
+plot(time_mesh(2:end-1),log10(alpha_exp_23s),LineWidth=1.5)
+hold on
+plot(time_mesh(2:end-1),log10(alpha_exp_Newton),LineWidth=1.5)
+hold on
+plot(time_mesh(2:end-1),log10(alpha_exp_45),LineWidth=1.5)
+hold on
+plot([0 20],[log10(alpha(alpha_unknown)) log10(alpha(alpha_unknown))], 'r--')
+legend('Logarithm of explicit calculation, ode23s','Logarithm of explicit calculation, Newton' , 'Logarithm of explicit calculation, ode45','True value of parameter')
+title('Modifierad, logaritmisk skala')
+
+subplot(2,2,3)
 plot(time_mesh(2:end-1),alpha_exp_23s_org,LineWidth=1.5)
 hold on
 plot(time_mesh(2:end-1),alpha_exp_Newton_org,LineWidth=1.5)
@@ -55,32 +55,18 @@ plot(time_mesh(2:end-1),alpha_exp_45_org,LineWidth=1.5)
 hold on
 plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
 legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
-title('Orginal, hela')
-
-subplot(2,2,3)
-plot(time_mesh(2:end-1),alpha_exp_23s_del1,LineWidth=1.5)
-hold on
-plot(time_mesh(2:end-1),alpha_exp_Newton_del1,LineWidth=1.5)
-hold on
-plot(time_mesh(2:end-1),alpha_exp_45_del1,LineWidth=1.5)
-hold on
-plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
-legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
-title('Modifierad, del 1 borta')
+title('Orginal')
 
 subplot(2,2,4)
-plot(time_mesh(2:end-1),alpha_exp_23s_del2,LineWidth=1.5)
+plot(time_mesh(2:end-1),log10(alpha_exp_23s_org),LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_Newton_del2,LineWidth=1.5)
+plot(time_mesh(2:end-1),log10(alpha_exp_Newton_org),LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_45_del2,LineWidth=1.5)
+plot(time_mesh(2:end-1),log10(alpha_exp_45_org),LineWidth=1.5)
 hold on
-plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
-legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
-title('Orginal, del 2  borta')
-
-hold on
-
+plot([0 20],[log10(alpha(alpha_unknown)) log10(alpha(alpha_unknown))], 'r--')
+legend('Logarithm of explicit calculation, ode23s','Logarithm of explicit calculation, Newton' , 'Logarithm of explicit calculation, ode45','True value of parameter')
+title('Orginal, logaritmisk skala')
 
 %%
 figure
