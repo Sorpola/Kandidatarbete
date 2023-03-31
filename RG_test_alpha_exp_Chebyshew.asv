@@ -1,5 +1,5 @@
 %%
-%clc, clf
+clc, clf
 
 t_min=0;t_max=20; m=500; x_initial =[5*10^6; 10^3; 10^3];%[3.1298490038*10^9; 10^-5; 402531911.894];% [160473576.808; 0;-8.8025319119*10^9];%  % Måste vi vara i SS för att antagandet om konstanta parametrar ska gälla? 
 time_mesh =[];
@@ -16,7 +16,7 @@ x_45 = ForwardODE45(alpha_1,time_mesh,x_initial);
 t_plot = [1:500];
 
 
-alpha_unknown=5;
+alpha_unknown=1;
 alpha_exp_23s=RG_calculate_alpha_exp(alpha,alpha_unknown,x_23s,t_min,t_max);
 alpha_exp_Newton=RG_calculate_alpha_exp(alpha,alpha_unknown,x_Newton,t_min,t_max);
 alpha_exp_45=RG_calculate_alpha_exp(alpha,alpha_unknown,x_45,t_min,t_max);
@@ -27,7 +27,7 @@ alpha_exp_Newton_org=calculate_alpha_exp(alpha,alpha_unknown,x_Newton,t_min,t_ma
 alpha_exp_45_org=calculate_alpha_exp(alpha,alpha_unknown,x_45,t_min,t_max);
 
 
-figure('name','Chebyshew')
+figure
 subplot(2,2,1)
 plot(time_mesh(2:end-1),alpha_exp_23s,LineWidth=1.5)
 hold on
