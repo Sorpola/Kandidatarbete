@@ -23,7 +23,6 @@ end
 
 
 
-
 function alpha_exp_k_FE=calc_explicit_FE(alpha,alpha_unknown,x,dx_dt);
 dm1=alpha(1);
 dm2=alpha(2);
@@ -46,19 +45,13 @@ dxM2_dt=dx_dt(3);
 
 if alpha_unknown==1
     alpha_exp_k_FE = r*(1-xT/betaT)/xM1 - dxT_dt/(xM1*xT) + dm2*xM2/xM1;
-    %alpha_exp_k=(-dxT_dt+r*xT*(1-xT/betaT)+dm2*xM2*xT)/(xT*xM1);
 elseif alpha_unknown==2
     alpha_exp_k_FE = dxT_dt/(xM2*xT) - r*(1-xT/betaT)/xM2 + dm1*xM1/xM2;
-    %alpha_exp_k = (dxT_dt-r*xT*(1-xT/betaT)+dm1*xM1*xT)/(xT*xM2);
 elseif alpha_unknown==3
     alpha_exp_k_FE = dxM1_dt/(xT*xM1*(1 - (xM2+xM1)/betaM)) +deltaM1/(xT*(1-(xM1+xM2)/betaM)) + k12/(1-(xM1+xM2)/betaM);
-   % alpha_exp_k = (dxM1_dt+deltaM1*xM1+k12*xM1*xT)/(xT*xM1*(1-(xM1+xM2)/betaM));
 elseif alpha_unknown==4
     alpha_exp_k_FE = dxM2_dt/(xT*xM1*(1 - (xM2+xM1)/betaM)) + deltaM2/(xT*(1 - (xM2+xM1)/betaM)) - k12/(1 - (xM2+xM1)/betaM);
-    %alpha_exp_k = dxM2_dt/(xT*xM2*(1-(xM1 +xM2)/betaM)) + deltaM2/(xT*(1-(xM1+xM2)/betaM)) - k12/(1-xM1/betaM + xM2/betaM);    %sämre än den ovan
-   % alpha_exp_k = (dxM2_dt+deltaM2*xM2-k12*xM1*xT)/(xT*xM2*(1-(xM1+xM2)/betaM));
 else
     alpha_exp_k_FE = -dxM1_dt/(xM1*xT) + deltaM1/xT + at1*(1-(xM1 + xM2)/betaM);
-   % alpha_exp_k = (dxM1_dt-at1*xT*xM1*(1-(xM1+xM2)/betaM)+deltaM1*xM1)/(xT*xM1);
 end
 end

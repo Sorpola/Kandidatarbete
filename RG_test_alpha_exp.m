@@ -11,7 +11,7 @@ x_45 = ForwardODE45(alpha_1,time_mesh,x_initial);
 t_plot = [1:500];
 
 
-alpha_unknown=1;
+alpha_unknown=2;
 alpha_exp_23s=RG_calculate_alpha_exp(alpha,alpha_unknown,x_23s,t_min,t_max);
 alpha_exp_Newton=RG_calculate_alpha_exp(alpha,alpha_unknown,x_Newton,t_min,t_max);
 alpha_exp_45=RG_calculate_alpha_exp(alpha,alpha_unknown,x_45,t_min,t_max);
@@ -20,6 +20,8 @@ alpha_exp_45=RG_calculate_alpha_exp(alpha,alpha_unknown,x_45,t_min,t_max);
 alpha_exp_23s_org=calculate_alpha_exp(alpha,alpha_unknown,x_23s,t_min,t_max);
 alpha_exp_Newton_org=calculate_alpha_exp(alpha,alpha_unknown,x_Newton,t_min,t_max);
 alpha_exp_45_org=calculate_alpha_exp(alpha,alpha_unknown,x_45,t_min,t_max);
+
+
 
 subplot(2,2,1)
 plot(time_mesh(2:end-1),alpha_exp_23s,LineWidth=1.5)
