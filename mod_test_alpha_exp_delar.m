@@ -11,6 +11,10 @@ x_45 = ForwardODE45(alpha_1,time_mesh,x_initial);
 t_plot = [1:500];
 
 
+gron = [102,194,165]/255;
+orange = [252,141,98]/255;
+lila = [141,160,203]/255;
+
 alpha_unknown=5;
 %modifierad, hela
 alpha_exp_23s=mod_calculate_alpha_exp(alpha,alpha_unknown,x_23s,t_min,t_max);
@@ -33,47 +37,45 @@ alpha_exp_Newton_del2=mod_calculate_alpha_exp_del2(alpha,alpha_unknown,x_Newton,
 alpha_exp_45_del2=mod_calculate_alpha_exp_del2(alpha,alpha_unknown,x_45,t_min,t_max);
 
 
-
-figure
 subplot(2,2,1)
-plot(time_mesh(2:end-1),alpha_exp_23s,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_23s,'color',gron, LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_Newton,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_Newton,'color',orange,LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_45,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_45,'color',lila,LineWidth=1.5)
 hold on
 plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
 legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
 title('Modifierad, hela')
 
 subplot(2,2,2)
-plot(time_mesh(2:end-1),alpha_exp_23s_org,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_23s_org,'color',gron, LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_Newton_org,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_Newton_org,'color',orange, LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_45_org,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_45_org,'color',lila, LineWidth=1.5)
 hold on
 plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
 legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
 title('Orginal, hela')
 
 subplot(2,2,3)
-plot(time_mesh(2:end-1),alpha_exp_23s_del1,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_23s_del1,'color',gron, LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_Newton_del1,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_Newton_del1,'color',orange, LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_45_del1,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_45_del1,'color',lila, LineWidth=1.5)
 hold on
 plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
 legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
 title('Modifierad, del 1 borta')
 
 subplot(2,2,4)
-plot(time_mesh(2:end-1),alpha_exp_23s_del2,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_23s_del2,'color',gron, LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_Newton_del2,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_Newton_del2,'color',orange, LineWidth=1.5)
 hold on
-plot(time_mesh(2:end-1),alpha_exp_45_del2,LineWidth=1.5)
+plot(time_mesh(2:end-1),alpha_exp_45_del2,'color',lila, LineWidth=1.5)
 hold on
 plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
 legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
