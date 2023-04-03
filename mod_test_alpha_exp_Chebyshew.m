@@ -78,33 +78,17 @@ title('Orginal')
 %hold on
 %%
 figure
-%subplot(2,1,1)
-%t = tiledlayout(1,1);
-
-%at = axes;% first axes, save handle
-%pos = get(time_mesh, 'position');% get the position vector
-%pos1 = pos(2);% save the original bottom position
-%pos(2) = pos(2)+pos(1); pos(4) = pos(4) -pos1; % raise bottom/reduce height->same overall upper position
-%set(time_mesh, 'position', pos); % and resize first axes
-%pos(2) = pos1; pos(4)=0.01; % reset bottom to original and small height
-%at(2)=axes('position',pos,'color','none');  % and create the second
-
 
 
 plot(time_mesh,x_45(1,:), 'r');
-%addaxis(t_plot,x_45(1,:),'kh');
 hold on
 plot( time_mesh,x_45(2,:),'g');
-%addaxis(t_plot,x_45(2,:),'kh');
 hold on
 plot(time_mesh,x_45(3,:),  'b');
-%addaxis(t_plot,x_45(3,:),'kh');
 hold on
 legend('x_T', 'x_{M1}', 'x_{M2}');
 xlabel('Mätpunkt');
 ylabel('Densitet')
-%time_mesh.XAxisLocation = 'top';
-%time_mesh.Box = 'off';
 
 
 
