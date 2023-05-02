@@ -18,8 +18,8 @@ alpha_mid = 10.^((log10(alpha_min)+log10(alpha_max))/2);
 % Saker att ändra för att göra andra grafer
 alpha = alpha_mid;  % Värden på parametrar som ej varieras
 big_var = 2;        % Hur många stora linjer
-small_var = 20;     % Hur många små linjer per stor linje
-alpha_chosen = 3;   % Vilken parameter ska varieras
+small_var = 5;     % Hur många små linjer per stor linje
+alpha_chosen = 2;   % Vilken parameter ska varieras
 
 alpha_chosen_variance = [alpha_min(alpha_chosen) alpha_max(alpha_chosen)];
 variation=logspace(log10(alpha_chosen_variance(1)),log10(alpha_chosen_variance(end)),big_var);
@@ -38,6 +38,8 @@ subplot(3,1,3)
 xlabel('Dagar')
 ylabel('Densitet av M2 makrofager')
 hold on
+
+
 
 lightBLUE = [206, 233, 234]/255;
 darkBLUE = [68, 92, 109]/255;

@@ -1,7 +1,7 @@
 %%
 clc, clf
 
-t_min=0;t_max=20; m=500; x_initial =[5*10^6; 10^3; 10^3];%[3.1298490038*10^9; 10^-5; 402531911.894];% [160473576.808; 0;-8.8025319119*10^9];%  % Måste vi vara i SS för att antagandet om konstanta parametrar ska gälla? 
+t_min=0;t_max=20; m=500; x_initial =[3.1298490038*10^9; 10^-5; 402531911.894];% [160473576.808; 0;-8.8025319119*10^9];% [5*10^6; 10^3; 10^3];%  % Måste vi vara i SS för att antagandet om konstanta parametrar ska gälla? 
 time_mesh =[];
 for k = 1:m
     time_mesh(end+1) = -(t_max-t_min)/2*cos((2*k-1)*pi/(2*m)) + (t_max+t_min)/2;
@@ -30,6 +30,28 @@ alpha_exp_23s_org=calculate_alpha_exp(alpha,alpha_unknown,x_23s,t_min,t_max);
 alpha_exp_Newton_org=calculate_alpha_exp(alpha,alpha_unknown,x_Newton,t_min,t_max);
 alpha_exp_45_org=calculate_alpha_exp(alpha,alpha_unknown,x_45,t_min,t_max);
 
+max_45_org = max(alpha_exp_45_org);
+max_Newton_org = max(alpha_exp_Newton_org);
+max_23s_org = max(alpha_exp_23s_org);
+
+max_45_mod = max(alpha_exp_45);
+max_Newton_mod = max(alpha_exp_Newton);
+max_23s_mod = max(alpha_exp_23s);
+
+
+max_org = max([max_45_org max_Newton_org max_23s_org]);
+max_mod = max([max_45_mod max_Newton_mod max_23s_mod]);
+
+min_45_org = min(alpha_exp_45_org);
+min_Newton_org = min(alpha_exp_Newton_org);
+min_23s_org = min(alpha_exp_23s_org);
+
+min_45_mod= min(alpha_exp_45);
+min_Newton_mod = min(alpha_exp_Newton);
+min_23s_mod = min(alpha_exp_23s);
+
+min_org = min([min_45_org min_Newton_org min_23s_org]);
+min_mod = min([min_45_mod min_Newton_mod min_23s_mod]);
 
 figure('name','Chebyshew')
 subplot(2,1,1)
@@ -42,7 +64,7 @@ hold on
 plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
 legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
 title('Modifierad')
-
+ylim([min_mod-max_mod/3,max_mod*1.3])
 %subplot(2,2,2)
 %plot(time_mesh(2:end-1),log10(alpha_exp_23s), 'color' ,gron, LineWidth=1.5)
 %hold on
@@ -64,7 +86,7 @@ hold on
 plot([0 20],[alpha(alpha_unknown) alpha(alpha_unknown)], 'r--')
 legend('Explicit calculation, ode23s','Explicit calculation, Newton' , 'Explicit calculation, ode45','True value of parameter')
 title('Orginal')
-
+ylim([min_org-max_org/3,max_org*1.3])
 %subplot(2,2,4)
 %plot(time_mesh(2:end-1),log10(alpha_exp_23s_org),'color', gron,LineWidth=1.5)
 %hold on
