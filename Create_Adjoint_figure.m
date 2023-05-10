@@ -2,13 +2,18 @@
 clc; close all; clear all;
 %%initial of x and time variables 
 m = 15; % number of observations
-obs_start = 2.1; obs_end = 7; %interval of observations
+obs_start = 5; obs_end = 7; %interval of observations
 time_final = 20;
+time_start = 0; 
 
-time_mesh = linspace(0,time_final,m);
+time_mesh = linspace(time_start,time_final,m);
 % x_initial = [x_T(0); x_M1(0); x_M2(0)]
 % initial values that seems to fit fig 1a 
 x_initial = [5*10^6; 10^3; 10^3]; 
+
+gron = [102,194,165]/255;
+orange = [252,141,98]/255;
+lila = [141,160,203]/255;
 
 
 %% Plot forward
@@ -23,13 +28,15 @@ figure
 hold on
 
 m2=1000;
-time_mesh2 = linspace(0,time_final,m2);
+time_mesh2 = linspace(time_start,time_final,m2);
 alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
 FN = ForwardNewton(alpha,time_mesh2,x_initial);
 F45 = ForwardODE45(alpha,time_mesh2,x_initial);
 
 subplot(1,2,1);
-plot(time_mesh2,FN(1,:),'-r',time_mesh2,F45(1,:),'--b','linewidth',2);
+plot(time_mesh2,FN(1,:),'-','Color',orange,'linewidth',2)
+    hold on
+    plot(time_mesh2,F45(1,:),'--','Color',lila,'linewidth',2)
 title('Framåtproblemet');
 xlabel('tid (dagar)');
 legend('x_T Newton', 'x_T ode45')
@@ -46,7 +53,7 @@ for j = 1:size(g_brus,1)
    gPol =@(t) [gPol(t); Pol_j(t)]; 
 end
 
-time_mesh2 = linspace(0,time_final,m2);
+time_mesh2 = linspace(time_start,time_final,m2);
 alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
 g_brus = gPol(time_mesh2);
 FN = ForwardNewton(alpha,time_mesh2,x_initial);  
@@ -55,7 +62,9 @@ AN = AdjointNewton(alpha, FN, g_brus, time_mesh2, obs_start, obs_end);
 A45 = AdjointODE45(alpha, F45, g_brus, time_mesh2, obs_start, obs_end);
 
 subplot(1,2,2);
-plot(time_mesh2,AN(2,:),'-r',time_mesh2,A45(2,:),'--b','linewidth',2)
+plot(time_mesh2,AN(2,:),'-','Color',orange,'linewidth',2)
+    hold on
+plot(time_mesh2,A45(2,:),'--','Color',lila,'linewidth',2)
 title('Bakåtproblemet'); 
 xlabel('tid (dagar)');
 legend('x_T Newton', 'x_T ode45')
@@ -63,21 +72,9 @@ legend('x_T Newton', 'x_T ode45')
    
 %% creating some special figures
 
-%%  Initials
-clc; close all; clear all;
-%%initial of x and time variables 
-m = 15; % number of observations
-obs_start = 2.1; obs_end = 7; %interval of observations
-time_final = 20;
 
-time_mesh = linspace(0,time_final,m);
-% x_initial = [x_T(0); x_M1(0); x_M2(0)]
-% initial values that seems to fit fig 1a 
-x_initial = [5*10^6; 10^3; 10^3];
 
-gron = [102,194,165]/255;
-orange = [252,141,98]/255;
-lila = [141,160,203]/255;
+
 
 
 %% observations 
@@ -98,39 +95,39 @@ plot(time_mesh,g_brus(1,:),'*')
 
   
 %% Test solver quality : Forward
-figure
-
-hold on
-sch = 0;
-for m2 = [50 100 200 400 800 1000]
-    time_mesh2 = linspace(0,time_final,m2);
-    alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
-    FN = ForwardNewton(alpha,time_mesh2,x_initial);
-    F45 = ForwardODE45(alpha,time_mesh2,x_initial);
-
-sch = sch+1;
-subplot(2, 3, sch);
-
-plot(time_mesh2,FN(1,:),'-r',time_mesh2,F45(1,:),'--b','linewidth',2);
-title(' forward problem');
-xlabel(m2)
-
-legend('x_T Newton', 'x_T ode45')
-%     text(time_mesh2(end),FN(1,end),['N', num2str(m2)])
-%     text(time_mesh2(end),FN(1,end),['45', num2str(m2)])
-end
-
-grid on
-
- 
-hold off
+% figure
+% 
+% hold on
+% sch = 0;
+% for m2 = [50 100 200 400 800 1000]
+%     time_mesh2 = linspace(time_start,time_final,m2);
+%     alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
+%     FN = ForwardNewton(alpha,time_mesh2,x_initial);
+%     F45 = ForwardODE45(alpha,time_mesh2,x_initial);
+% 
+% sch = sch+1;
+% subplot(2, 3, sch);
+% 
+% plot(time_mesh2,FN(1,:),'-r',time_mesh2,F45(1,:),'--b','linewidth',2);
+% title(' forward problem');
+% xlabel(m2)
+% 
+% legend('x_T Newton', 'x_T ode45')
+% %     text(time_mesh2(end),FN(1,end),['N', num2str(m2)])
+% %     text(time_mesh2(end),FN(1,end),['45', num2str(m2)])
+% end
+% 
+% grid on
+% 
+%  
+% hold off
 
 
 %% Test solver quality : Adjoint
-clc
+
 noise_level = 0.1;
 time_obs = linspace(obs_start, obs_end, 15);
-alpha_obs = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_obs);
+alpha_obs = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh);
 [g, g_brus, g_add] = ExactODE45(alpha_obs,time_obs,noise_level,x_initial); % get observations
 %interpolate to be able to use for other time meshes
 gPol =@(t) [];
@@ -147,7 +144,7 @@ sch = 0;
 
 for m2 = [200 800 2000 20000]
     disp(m2)
-    time_mesh2 = linspace(0,time_final,m2);
+    time_mesh2 = linspace(time_start,time_final,m2);
     alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
     g_brus = gPol(time_mesh2);
     FN = ForwardNewton(alpha,time_mesh2,x_initial);  
@@ -158,9 +155,9 @@ for m2 = [200 800 2000 20000]
     sch = sch+1;
     subplot(2, 2, sch);
     subindex = {'a) ', 'b) ', 'c) ', 'd) '};
-    plot(time_mesh2,AN(2,:),'-','Color',orange,'linewidth',2)
+    plot(time_mesh2,AN(1,:),'-','Color',orange,'linewidth',2)
     hold on
-    plot(time_mesh2,A45(2,:),'--','Color',lila,'linewidth',2)
+    plot(time_mesh2,A45(1,:),'--','Color',lila,'linewidth',2)
     xlabel(m2)
     title([subindex{sch}, 'Adjoint problem']); 
     legend('x_T Newton', 'x_T ode45')
@@ -173,7 +170,7 @@ figure
 
 for m2=[2000]
     disp(m2)
-    time_mesh2 = linspace(0,time_final,m2);
+    time_mesh2 = linspace(time_start,time_final,m2);
     alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
     g_brus = gPol(time_mesh2);
     FN = ForwardNewton(alpha,time_mesh2,x_initial);  
@@ -182,27 +179,23 @@ for m2=[2000]
     A45 = AdjointODE45(alpha, F45, g_brus, time_mesh2, obs_start, obs_end);
     
     subplot(1,2,1)
-    plot(time_mesh2,FN(2,:),'-','Color',orange,'linewidth',2)
+    plot(time_mesh2,FN(1,:),'-','Color',orange,'linewidth',2)
     hold on
-    plot(time_mesh2,F45(2,:),'--','Color',lila,'linewidth',2)
+    plot(time_mesh2,F45(1,:),'--','Color',lila,'linewidth',2)
     title('Forward problem'); 
     legend('x_T Newton', 'x_T ode45')
+    xlim([5 20])
     subplot (1,2,2)
     plot(time_mesh2,AN(2,:),'-','Color',orange,'linewidth',2)
     hold on
     plot(time_mesh2,A45(2,:),'--','Color',lila,'linewidth',2)
     title('Adjoint problem'); 
     legend('x_T Newton', 'x_T ode45')
+    xlim([5 20])
     
 
 end 
 
-time_mesh2 = linspace(0,time_final,m2);
-    alpha = alpha_vec(10^-9,10^-10,10^-8,10^-10,5*10^-10,time_mesh2);
-    FN = ForwardNewton(alpha,time_mesh2,x_initial);
-    F45 = ForwardODE45(alpha,time_mesh2,x_initial);
-    plot(time_mesh2,FN(2,:))
-grid on
 
 
     
